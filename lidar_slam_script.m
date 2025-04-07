@@ -310,5 +310,57 @@ RMSEeval(groundTruthTrajectory,odometryPositions,mappingPositions);
 %% Eventuali sviluppi futuri (BETA) 
 figure
 hold on
-plot3(out.IMUsens.Data(:,1), out.IMUsens.Data(:,2), out.IMUsens.Data(:,3),'r') % traiettoria da IMU
+imu = out.IMUsens.Data;
+plot3(imu(:,1), imu(:,2), imu(:,3),'r') % traiettoria da IMU
 plot3(mappingPositions(:,1),mappingPositions(:,2),mappingPositions(:,3),'b', LineWidth=1,DisplayName="Localizzazione e mappatura")
+
+% Prealloca array di oggetti rigidtform3d
+N = size(imu, 1);
+tf_array(N) = rigidtform3d;  % inizializzazione array di oggetti
+
+% Crea i rigidtform3d
+for i = 1:N
+    % Nessuna rotazione (identità)
+    R = eye(3);
+
+    % Traslazione
+    t = imu(i, :);  % [x y z]
+
+    % Crea la trasformazione
+    tf_array(i) = rigidtform3d(R, t);
+end
+
+% Inizializzazione della mappa 3D
+map3D = pointCloud(zeros(0,3));
+
+% Numero di scansioni
+numFrames = numel(ptCloudArr);
+
+% Ciclo sulle scansioni e accumulo nella mappa
+for frameIdx = 1:numFrames
+    disp("Frame " + frameIdx + " of " + numFrames);
+    
+    % Estrai la scansione corrente e la posa associata
+    ptCloud = ptCloudArr(frameIdx);
+    ptCloudProcessed = helperPreprocessPC(ptCloud);
+    
+    t = imu(frameIdx, :);           % [x y z]
+    R = eye(3);                     % nessuna rotazione
+    pose = rigidtform3d(R, t);      % ora è un oggetto valido
+
+    % Applica la trasformazione alla scansione
+    transformedPtCloud = pctransform(ptCloudProcessed, pose);
+
+    % Aggiungi la scansione trasformata alla mappa
+    map3D = pcmerge(map3D, transformedPtCloud, 0.05); % Fusione con risoluzione 5 cm
+
+    % Visualizza la mappa aggiornata
+    clf; % Pulisce la figura per aggiornamenti fluidi
+    pcshow(map3D);
+    title("Mappa 3D SLAM LiDAR");
+    grid off;
+    axis on;
+    xlabel("X (m)"); ylabel("Y (m)"); zlabel("Z (m)");
+    view(3);
+    drawnow;
+end
