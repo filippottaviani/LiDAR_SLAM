@@ -1,6 +1,6 @@
 # LiDAR SLAM
 
-Questo repository contiene il progetto relativo all'esame di Autonomous Robotics, sviluppato da Filippo Ottaviani in collaborazione con Samuele Ceccarelli.
+Questo repository contiene il progetto relativo all'esame di Autonomous Robotics, sviluppato da Filippo Ottaviani e Samuele Ceccarelli.
 
 ## Descrizione
 
@@ -9,9 +9,11 @@ Il progetto implementa un sistema di Simultaneous Localization and Mapping (SLAM
 ## Struttura del Repository
 
 - `animations/`: Contiene animazioni e visualizzazioni generate durante l'elaborazione dei dati.
+- `images/`: Contiene le immagini risultanti dalle varie sezioni di codice.
 - `functions/`: Include funzioni MATLAB personalizzate utilizzate nel progetto.
 - `CustomLidarSLAM.slx`: Modello Simulink principale per l'implementazione del sistema SLAM.
 - `lidar_slam_project.mlx`: Script MATLAB Live che documenta e guida attraverso le varie fasi del progetto.
+- `lidar_slam_script.m`: Script MATLAB che contiene le varie fasi del progetto.
 
 ## Script MATLAB
 
@@ -55,15 +57,15 @@ Questi input definiscono la traiettoria di riferimento che il veicolo seguirà n
 
 ### **2. Simulazione del Veicolo 3D**
 - Il blocco **"Simulation 3D Vehicle with Ground Following"** rappresenta un veicolo simulato in un ambiente 3D, in grado di seguire il terreno.
-- Riceve in ingresso le coordinate \(X, Y\) e l'orientazione \(Yaw\).
+- Riceve in ingresso le coordinate \(X, Y\) e l'orientamento \(Yaw\).
 - Il veicolo segue il percorso definito dagli input e genera dati di navigazione.
 
 ### **3. Sensore Lidar**
 - Il sistema è dotato di un **sensore Lidar**, che acquisisce dati sull'ambiente circostante.
 - Il blocco del sensore genera:
-  - **Point Cloud (Nuvola di punti)**: Matrice \(32 \times 2250 \times 3\) contenente le misurazioni del Lidar.
-  - **Translation (Traslazione)**: Vettore \(1 \times 3\) con la posizione del Lidar.
-  - **Rotation (Rotazione)**: Vettore \(1 \times 3\) con l'orientamento del Lidar.
+  - **Point Cloud (Nuvola di punti)**: Matrice \(32 X 2250 X 3\) contenente le misurazioni del Lidar.
+  - **Translation (Traslazione)**: Vettore \(1 X 3\) con la posizione del Lidar.
+  - **Rotation (Rotazione)**: Vettore \(1 X 3\) con l'orientamento del Lidar.
 
 ### **4. Output: Dati del Lidar**
 I dati acquisiti dal sensore vengono inviati ai seguenti output:
